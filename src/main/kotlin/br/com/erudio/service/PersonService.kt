@@ -1,8 +1,10 @@
 package br.com.erudio.service
 
+import br.com.erudio.data.vo.v2.PersonVO as pVO2
 import br.com.erudio.data.vo.v1.PersonVO
 import br.com.erudio.exceptions.ResourceNotFoundException
 import br.com.erudio.mapper.DozerMapper
+import br.com.erudio.mapper.PersonMapper
 import br.com.erudio.model.Person
 import br.com.erudio.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +16,9 @@ class PersonService {
 
     @Autowired
     private lateinit var personRepository: PersonRepository
+
+    @Autowired
+    private lateinit var pMapper: PersonMapper
 
     private val logger = Logger.getLogger(PersonService::class.java.name)
 
@@ -53,6 +58,12 @@ class PersonService {
         val entity = personRepository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID") }
         personRepository.delete(entity)
+    }
+
+    fun createV2(person: pVO2): pVO2 {
+        logger.info("Creating a new person with name: ${person.firstName}!")
+        val entity : Person = pMapper.mapVOToEntity(person)
+        return pMapper.mapEntityToVO(personRepository.save(entity))
     }
 
 }

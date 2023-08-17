@@ -1,6 +1,7 @@
 package br.com.erudio.calculator
 
 import br.com.erudio.data.vo.v1.PersonVO
+import br.com.erudio.data.vo.v2.PersonVO as pVO2
 import br.com.erudio.service.PersonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -33,6 +34,13 @@ class PersonController {
     )
     fun create(@RequestBody person: PersonVO) : PersonVO {
         return personService.create(person)
+    }
+    @PostMapping(value=["/v2"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]//"application/json"
+    )
+    fun create(@RequestBody person: pVO2) : pVO2  {
+        return personService.createV2(person)
     }
     @PutMapping(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
